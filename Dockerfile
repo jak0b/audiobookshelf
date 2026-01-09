@@ -1,5 +1,6 @@
 ARG NUSQLITE3_DIR="/usr/local/lib/nusqlite3"
 ARG NUSQLITE3_PATH="${NUSQLITE3_DIR}/libnusqlite3.so"
+ARG ROUTER_BASE_PATH="/"
 
 ### STAGE 0: Build client ###
 FROM node:20-alpine AS build-client
