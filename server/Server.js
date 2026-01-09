@@ -2,6 +2,7 @@ const Path = require('path')
 const Sequelize = require('sequelize')
 const express = require('express')
 const http = require('http')
+const https = require('https')
 const util = require('util')
 const fs = require('./libs/fsExtra')
 const fileUpload = require('./libs/expressFileupload')
@@ -300,7 +301,18 @@ class Server {
     app.use(global.RouterBasePath, router)
     app.disable('x-powered-by')
 
-    this.server = http.createServer(app)
+    const tls = {
+      cert: process.env.TLS_SERVER_CERT_PATH,
+      key: process.env.TLS_SERVER_KEY_PATH,
+    }
+    if (tls.cert && tls.key) {
+      this.server = https.createServer({
+        cert: fs.readFileSync(tls.cert),
+        key: fs.readFileSync(tls.key),
+      }, app)
+    } else {
+      this.server = http.createServer(app)
+    }
 
     router.use(
       fileUpload({
